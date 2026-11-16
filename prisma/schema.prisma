@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum JobStatus {
+  QUEUED
+  CLONING
+  PARSING
+  AI_REVIEW
+  COMPLETED
+  FAILED
+}
+
+model User {
+  id        String        @id @default(cuid())
+  githubId  String        @unique
+  username  String
+  avatarUrl String?
+  createdAt DateTime      @default(now())
+  analyses  AnalysisJob[]
+
+  @@index([username])
+}
+
+model Repository {
+  id             String        @id @default(cuid())
+  owner          String
+  name           String
+  fullName       String        @unique
+  stars          Int           @default(0)
+  defaultBranch  String        @default("main")
+  lastAnalyzedAt DateTime?
+  analyses       AnalysisJob[]
+
+  @@index([owner, name])
+}
+
+model AnalysisJob {
+  id           String     @id @default(cuid())
+  repoId       String
+  repository   Repository @relation(fields: [repoId], references: [id], onDelete: Cascade)
+  userId       String?
+  user         User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+  status       JobStatus  @default(QUEUED)
+  healthScore  Int?
+  metricsJson  Json?
+  graphJson    Json?
+  aiReviewJson Json?
+  errorMessage String?
+  createdAt    DateTime   @default(now())
+  completedAt  DateTime?
+
+  @@index([repoId, status, completedAt])
+  @@index([userId, createdAt])
+}

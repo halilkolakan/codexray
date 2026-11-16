@@ -1,0 +1,122 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --brand-accent-light: #0891b2;
+  --brand-accent-dark: #22d3ee;
+  --accent-color: var(--brand-accent-dark);
+
+  --scrollbar-track-light: #e4e4e7;
+  --scrollbar-track-dark: #18181b;
+  --scrollbar-thumb-light: #71717a;
+  --scrollbar-thumb-dark: #52525b;
+
+  --scrollbar-track: var(--scrollbar-track-dark);
+  --scrollbar-thumb: var(--scrollbar-thumb-dark);
+
+  @media (prefers-color-scheme: dark) {
+    --accent-color: var(--brand-accent-dark);
+    --scrollbar-track: var(--scrollbar-track-dark);
+    --scrollbar-thumb: var(--scrollbar-thumb-dark);
+  }
+
+  @supports (color: light-dark(white, black)) {
+    --accent-color: light-dark(var(--brand-accent-light), var(--brand-accent-dark));
+    --scrollbar-track: light-dark(var(--scrollbar-track-light), var(--scrollbar-track-dark));
+    --scrollbar-thumb: light-dark(var(--scrollbar-thumb-light), var(--scrollbar-thumb-dark));
+  }
+
+  color-scheme: dark;
+  accent-color: var(--accent-color);
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+@supports not (scrollbar-color: auto) {
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+  }
+}
+
+body {
+  background-color: #09090b;
+  color: #f4f4f5;
+  min-height: 100vh;
+}
+
+/* Defer validation feedback until user interaction (:user-invalid + fallback) */
+.repo-url-input:is(:user-invalid, .user-invalid-fallback) {
+  border-color: #ef4444 !important;
+  background-color: rgba(127, 29, 29, 0.25) !important;
+}
+
+.repo-url-input:is(:user-invalid, .user-invalid-fallback) ~ .repo-error-msg {
+  display: flex;
+}
+
+.repo-url-input:is(:user-valid, .user-valid-fallback) {
+  border-color: #10b981 !important;
+}
+
+.repo-error-msg {
+  display: none;
+}
+
+/* Accessible Tablist & Selected Underline Indicator */
+[role="tab"] {
+  position: relative;
+}
+
+[role="tab"][aria-selected="true"]::after {
+  content: "";
+  position: absolute;
+  inset: auto 10px 0;
+  border-block-end: 2px solid #22d3ee;
+}
+
+/* Visually hidden utility for polite ARIA live region */
+.visually-hidden:where(:not(:focus-within, :active)) {
+  position: absolute !important;
+  clip-path: inset(50%) !important;
+  overflow: hidden !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  white-space: nowrap !important;
+}
+
+/* React Flow Dark Theme Overrides */
+.react-flow__attribution {
+  background: rgba(24, 24, 27, 0.8) !important;
+  color: #71717a !important;
+  font-size: 10px !important;
+}
+
+.react-flow__controls {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6) !important;
+  border: 1px solid #27272a !important;
+  border-radius: 0.5rem !important;
+  overflow: hidden !important;
+}
+
+.react-flow__controls-button {
+  background: #18181b !important;
+  border-bottom: 1px solid #27272a !important;
+  fill: #e4e4e7 !important;
+  color: #e4e4e7 !important;
+}
+
+.react-flow__controls-button:hover {
+  background: #27272a !important;
+}
